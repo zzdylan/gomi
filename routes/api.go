@@ -7,12 +7,18 @@ import (
 	"gomi/app/http/controllers/api/v1/test"
 	"gomi/app/http/middlewares"
 	"gomi/pkg/config"
+	"gomi/pkg/response"
 )
 
 // RegisterAPIRoutes 注册网页相关路由
 func RegisterAPIRoutes(r *gin.Engine) {
 
 	var v1 *gin.RouterGroup
+
+	r.GET("/ping", func(c *gin.Context) {
+		response.Success(c)
+	})
+
 	if len(config.Get("app.api_domain")) == 0 {
 		v1 = r.Group("/api/v1")
 	} else {
