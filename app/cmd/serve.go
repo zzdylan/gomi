@@ -1,12 +1,15 @@
 package cmd
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"gomi/bootstrap"
 	"gomi/pkg/config"
-	"gomi/pkg/console"
 	"gomi/pkg/logger"
+	"net/http"
+	"os/signal"
+	"syscall"
 )
 
 // CmdServe represents the available web sub-command.
@@ -31,10 +34,26 @@ func runWeb(cmd *cobra.Command, args []string) {
 	// 初始化路由绑定
 	bootstrap.SetupRoute(router)
 
-	// 运行服务器
-	err := router.Run(":" + config.Get("app.port"))
-	if err != nil {
-		logger.ErrorString("CMD", "serve", err.Error())
-		console.Exit("Unable to start server, error:" + err.Error())
+	// 创建 HTTP 服务器
+	srv := &http.Server{
+		Addr:    ":" + config.Get("app.port"),
+		Handler: router,
+	}
+
+	// 在启动服务器前打印提示信息
+	logger.Info("Starting web server on port " + config.Get("app.port"))
+	defer logger.Info("exit web server")
+
+	ctx, _ := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		<-ctx.Done()
+		if err := srv.Shutdown(ctx); err != nil {
+			logger.Fatal(err.Error())
+		}
+		logger.Info("Shutdown web server")
+	}()
+
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		logger.Fatal(err.Error())
 	}
 }
