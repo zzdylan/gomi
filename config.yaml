@@ -1,0 +1,38 @@
+app:
+  name: Gomi
+  env: local
+  debug: true
+  url: http://localhost:3000
+  port: 3000
+  timezone: Asia/Shanghai
+  key: 33446a9dcf9ea060a0a6532b166da32f304af0de
+  api_domain: 
+
+database:
+  connection: mysql
+  host: localhost
+  port: 3306
+  database: gomi
+  username: root
+  password: root
+  charset: utf8mb4
+  max_idle_connections: 100
+  max_open_connections: 25
+  max_life_seconds: 300
+  sqlite_file: database/database.db
+
+redis:
+  host: localhost
+  port: 6379
+  database: 1
+  database_cache: 0
+  password: 
+
+log:
+  level: debug
+  type: single
+  filename: storage/logs/logs.log
+  max_size: 64
+  max_backup: 5
+  max_age: 30
+  compress: false

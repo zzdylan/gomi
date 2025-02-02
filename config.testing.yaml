@@ -1,0 +1,16 @@
+app:
+  name: Gomi
+  env: testing
+  debug: false
+  url: http://testing.example.com
+  port: 3000
+  timezone: Asia/Shanghai
+  
+database:
+  connection: mysql
+  host: testing-db
+  port: 3306
+  database: gomi_testing
+  username: root
+  password: testing-password
+  charset: utf8mb4 

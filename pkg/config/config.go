@@ -19,13 +19,11 @@ type ConfigFunc func() map[string]interface{}
 var ConfigFuncs map[string]ConfigFunc
 
 func init() {
-
 	// 1. 初始化 Viper 库
 	viper = viperlib.New()
-	// 2. 配置类型，支持 "json", "toml", "yaml", "yml", "properties",
-	//             "props", "prop", "env", "dotenv"
-	viper.SetConfigType("env")
-	// 3. 环境变量配置文件查找的路径，相对于 main.go
+	// 2. 将配置类型改为 yaml
+	viper.SetConfigType("yaml")
+	// 3. 配置文件查找的路径，相对于 main.go
 	viper.AddConfigPath(".")
 	// 4. 设置环境变量前缀，用以区分 Go 的系统环境变量
 	viper.SetEnvPrefix("appenv")
@@ -50,24 +48,23 @@ func loadConfig() {
 }
 
 func loadEnv(envSuffix string) {
-
-	// 默认加载 .env 文件，如果有传参 --env=name 的话，加载 .env.name 文件
-	envPath := ".env"
+	// 默认加载 config.yaml 文件，如果有传参 --env=name 的话，加载 config.name.yaml 文件
+	configPath := "config"
 	if len(envSuffix) > 0 {
-		filepath := ".env." + envSuffix
+		filepath := "config." + envSuffix + ".yaml"
 		if _, err := os.Stat(filepath); err == nil {
-			// 如 .env.testing 或 .env.stage
-			envPath = filepath
+			// 如 config.testing.yaml 或 config.stage.yaml
+			configPath = "config." + envSuffix
 		}
 	}
 
-	// 加载 env
-	viper.SetConfigName(envPath)
+	// 加载配置文件
+	viper.SetConfigName(configPath)
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
 	}
 
-	// 监控 .env 文件，变更时重新加载
+	// 监控配置文件，变更时重新加载
 	viper.WatchConfig()
 }
 
