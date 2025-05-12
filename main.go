@@ -9,8 +9,9 @@ import (
 	"gomi/pkg/console"
 	"os"
 
-	"github.com/spf13/cobra"
 	"gomi/app/cmd/make"
+
+	"github.com/spf13/cobra"
 )
 
 func init() {
@@ -43,6 +44,9 @@ func main() {
 
 			// 初始化缓存
 			bootstrap.SetupCache()
+
+			// 初始化 NSQ
+			bootstrap.SetupNsq()
 		},
 	}
 
@@ -54,6 +58,7 @@ func main() {
 		make.CmdMake,
 		cmd.CmdMigrate,
 		cmd.CmdCache,
+		cmd.CmdTestPublishNsq,
 	)
 
 	// 配置默认运行 Web 服务
