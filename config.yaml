@@ -6,7 +6,7 @@ app:
   port: 3000
   timezone: Asia/Shanghai
   key: 33446a9dcf9ea060a0a6532b166da32f304af0de
-  api_domain: 
+  api_domain:
 
 database:
   connection: mysql
@@ -26,7 +26,7 @@ redis:
   port: 6379
   database: 1
   database_cache: 0
-  password: 
+  password:
 
 log:
   level: debug
@@ -36,3 +36,9 @@ log:
   max_backup: 5
   max_age: 30
   compress: false
+
+nsq:
+  addr: 127.0.0.1:4150
+  lookupd: 127.0.0.1:4161
+  consumer:
+    master_concurrency: 1
