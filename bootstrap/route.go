@@ -25,6 +25,7 @@ func SetupRoute(router *gin.Engine) {
 
 func registerGlobalMiddleWare(router *gin.Engine) {
 	router.Use(
+		middlewares.Cors(),
 		middlewares.Logger(),
 		middlewares.Recovery(),
 		middlewares.ForceUA(),

@@ -10,11 +10,12 @@ import (
 // User 用户模型
 type User struct {
 	models.BaseModel
-
+	Username string `json:"username" gorm:"type:varchar(255);not null;unique"`
 	Name     string `json:"name,omitempty" gorm:"type:varchar(255)"`
 	Email    string `json:"-" gorm:"type:varchar(255)"`
 	Phone    string `json:"-" gorm:"type:varchar(255)"`
 	Password string `json:"-" gorm:"type:varchar(255)"`
+	Avatar   string `json:"avatar,omitempty" gorm:"type:varchar(255)"`
 
 	models.CommonTimestampsField
 }
