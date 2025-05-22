@@ -1,5 +1,5 @@
-// Package me 处理用户相关逻辑
-package me
+// Package user 处理用户相关逻辑
+package user
 
 import (
 	v1 "gomi/app/http/controllers/api/v1"
@@ -9,13 +9,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// MeController 登录控制器
-type MeController struct {
+// UserController 登录控制器
+type UserController struct {
 	v1.BaseAPIController
 }
 
-// Login使用username和password登录
-func (mc *MeController) Info(c *gin.Context) {
+// Me 获取当前用户信息
+func (uc *UserController) Me(c *gin.Context) {
 	user := auth.CurrentUser(c)
 	response.Data(c, user)
 }

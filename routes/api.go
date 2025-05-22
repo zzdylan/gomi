@@ -3,7 +3,8 @@ package routes
 
 import (
 	"gomi/app/http/controllers/api/v1/auth"
-	"gomi/app/http/controllers/api/v1/me"
+	"gomi/app/http/controllers/api/v1/user"
+
 	"gomi/app/http/middlewares"
 	"gomi/pkg/config"
 	"gomi/pkg/response"
@@ -50,6 +51,9 @@ func RegisterAPIRoutes(r *gin.Engine) {
 	authGroup := v1.Group("/auth")
 	{
 
+		captcha := new(auth.VerifyCodeController)
+		authGroup.GET("/captcha", captcha.ShowCaptcha)
+
 		signin := new(auth.SigninController)
 		// 登录
 		authGroup.POST("/login", signin.Login)
@@ -65,10 +69,10 @@ func RegisterAPIRoutes(r *gin.Engine) {
 	}
 	// }
 
-	meGroup := v1.Group("/me").Use(middlewares.AuthJWT())
+	userGroup := v1.Group("/users").Use(middlewares.AuthJWT())
 	{
-		mc := new(me.MeController)
-		meGroup.GET("/info", mc.Info)
+		uc := new(user.UserController)
+		userGroup.GET("/me", uc.Me)
 	}
 
 }

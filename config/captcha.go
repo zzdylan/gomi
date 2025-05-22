@@ -13,7 +13,7 @@ func init() {
 			"width": 240,
 
 			// 验证码的长度
-			"length": 6,
+			"length": 4,
 
 			// 数字的最大倾斜角度
 			"maxskew": 0.7,

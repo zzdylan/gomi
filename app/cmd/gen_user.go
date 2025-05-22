@@ -17,6 +17,7 @@ func runGenUser(cmd *cobra.Command, args []string) {
 	user := user.User{
 		Username: "test",
 		Password: "123456",
+		Avatar:   "http://tools.51godream.com/avatar.png",
 	}
 	user.Create()
 }

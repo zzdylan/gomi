@@ -15,6 +15,7 @@ type User struct {
 	Email    string `json:"-" gorm:"type:varchar(255)"`
 	Phone    string `json:"-" gorm:"type:varchar(255)"`
 	Password string `json:"-" gorm:"type:varchar(255)"`
+	Avatar   string `json:"avatar,omitempty" gorm:"type:varchar(255)"`
 
 	models.CommonTimestampsField
 }

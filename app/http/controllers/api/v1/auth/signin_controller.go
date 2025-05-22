@@ -5,6 +5,7 @@ import (
 	v1 "gomi/app/http/controllers/api/v1"
 	"gomi/app/models/user"
 	"gomi/app/requests"
+	"gomi/pkg/captcha"
 	"gomi/pkg/jwt"
 	"gomi/pkg/response"
 
@@ -21,6 +22,12 @@ func (sc *SigninController) Login(c *gin.Context) {
 	// 获取请求参数，并做表单验证
 	request := requests.SigninRequest{}
 	if ok := requests.Validate(c, &request, requests.Signin); !ok {
+		return
+	}
+
+	// 验证验证码
+	if !captcha.NewCaptcha().VerifyCaptcha(request.CaptchaID, request.Captcha) {
+		response.Fail(c, "验证码错误")
 		return
 	}
 

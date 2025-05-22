@@ -25,6 +25,7 @@ func SetupRoute(router *gin.Engine) {
 
 func registerGlobalMiddleWare(router *gin.Engine) {
 	router.Use(
+		middlewares.Cors(),
 		middlewares.Logger(),
 		middlewares.Recovery(),
 		middlewares.ForceUA(),
@@ -34,6 +35,12 @@ func registerGlobalMiddleWare(router *gin.Engine) {
 func setup404Handler(router *gin.Engine) {
 	// 处理 404 请求
 	router.NoRoute(func(c *gin.Context) {
+		// 如果是OPTIONS请求，返回200状态码
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(200)
+			return
+		}
+
 		// 获取标头信息的 Accept 信息
 		acceptString := c.Request.Header.Get("Accept")
 		if strings.Contains(acceptString, "text/html") {

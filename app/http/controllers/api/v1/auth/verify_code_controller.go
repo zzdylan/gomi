@@ -1,11 +1,12 @@
 package auth
 
 import (
-	"github.com/gin-gonic/gin"
 	v1 "gomi/app/http/controllers/api/v1"
 	"gomi/pkg/captcha"
 	"gomi/pkg/logger"
 	"gomi/pkg/response"
+
+	"github.com/gin-gonic/gin"
 )
 
 // VerifyCodeController 用户控制器
@@ -20,7 +21,7 @@ func (vc *VerifyCodeController) ShowCaptcha(c *gin.Context) {
 	// 记录错误日志，因为验证码是用户的入口，出错时应该记 error 等级的日志
 	logger.LogIf(err)
 	// 返回给用户
-	response.JSON(c, gin.H{
+	response.Data(c, gin.H{
 		"captcha_id":    id,
 		"captcha_image": b64s,
 	})
