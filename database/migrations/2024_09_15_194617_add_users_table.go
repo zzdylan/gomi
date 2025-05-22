@@ -1,33 +1,33 @@
 package migrations
 
 import (
-    "database/sql"
-    "gomi/app/models"
-    "gomi/pkg/migrate"
+	"database/sql"
+	"gomi/app/models/user"
+	"gomi/pkg/migrate"
 
-    "gorm.io/gorm"
+	"gorm.io/gorm"
 )
 
 func init() {
 
-    type User struct {
-        models.BaseModel
+	// type User struct {
+	//     models.BaseModel
 
-        Name     string `gorm:"type:varchar(255);not null;index"`
-        Email    string `gorm:"type:varchar(255);index;default:null"`
-        Phone    string `gorm:"type:varchar(20);index;default:null"`
-        Password string `gorm:"type:varchar(255)"`
+	//     Name     string `gorm:"type:varchar(255);not null;index"`
+	//     Email    string `gorm:"type:varchar(255);index;default:null"`
+	//     Phone    string `gorm:"type:varchar(20);index;default:null"`
+	//     Password string `gorm:"type:varchar(255)"`
 
-        models.CommonTimestampsField
-    }
+	//     models.CommonTimestampsField
+	// }
 
-    up := func(migrator gorm.Migrator, DB *sql.DB) {
-        migrator.AutoMigrate(&User{})
-    }
+	up := func(migrator gorm.Migrator, DB *sql.DB) {
+		migrator.AutoMigrate(&user.User{})
+	}
 
-    down := func(migrator gorm.Migrator, DB *sql.DB) {
-        migrator.DropTable(&User{})
-    }
+	down := func(migrator gorm.Migrator, DB *sql.DB) {
+		migrator.DropTable(&user.User{})
+	}
 
-    migrate.Add("2024_09_15_194617_add_users_table", up, down)
+	migrate.Add("2024_09_15_194617_add_users_table", up, down)
 }

@@ -55,6 +55,7 @@ func main() {
 		cmd.CmdServe,
 		cmd.CmdKey,
 		cmd.CmdPlay,
+		cmd.CmdGenUser,
 		make.CmdMake,
 		cmd.CmdMigrate,
 		cmd.CmdCache,

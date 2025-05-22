@@ -2,12 +2,13 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
 	"gomi/app/http/controllers/api/v1/auth"
-	"gomi/app/http/controllers/api/v1/test"
+	"gomi/app/http/controllers/api/v1/me"
 	"gomi/app/http/middlewares"
 	"gomi/pkg/config"
 	"gomi/pkg/response"
+
+	"github.com/gin-gonic/gin"
 )
 
 // RegisterAPIRoutes 注册网页相关路由
@@ -32,31 +33,42 @@ func RegisterAPIRoutes(r *gin.Engine) {
 	//		"Hello": "World!",
 	//	})
 	//})
-	v1.Use(middlewares.LimitIP("5-M"))
-	{
-		testGroup := v1.Group("/test")
-		{
-			t := new(test.TestController)
-			// 判断手机是否已注册
-			testGroup.POST("/index", t.Index)
-		}
-	}
+	// v1.Use(middlewares.LimitIP("5-M"))
+	// {
+	// 	testGroup := v1.Group("/test")
+	// 	{
+	// 		t := new(test.TestController)
+	// 		// 判断手机是否已注册
+	// 		testGroup.POST("/index", t.Index)
+	// 	}
+	// }
 	// 全局限流中间件：每小时限流。这里是所有 API （根据 IP）请求加起来。
 	// 作为参考 Github API 每小时最多 60 个请求（根据 IP）。
 	// 测试时，可以调高一点。
-	v1.Use(middlewares.LimitIP("200-H"))
+	// v1.Use(middlewares.LimitIP("200-H"))
+	// {
+	authGroup := v1.Group("/auth")
 	{
-		authGroup := v1.Group("/auth")
-		{
-			suc := new(auth.SignupController)
-			// 判断手机是否已注册
-			authGroup.POST("/signup/phone/exist", suc.IsPhoneExist)
 
-			// 发送验证码
-			vcc := new(auth.VerifyCodeController)
-			// 图片验证码，需要加限流
-			authGroup.POST("/verify-codes/captcha", vcc.ShowCaptcha)
-		}
+		signin := new(auth.SigninController)
+		// 登录
+		authGroup.POST("/login", signin.Login)
+
+		suc := new(auth.SignupController)
+		// 判断手机是否已注册
+		authGroup.POST("/signup/phone/exist", suc.IsPhoneExist)
+
+		// 发送验证码
+		vcc := new(auth.VerifyCodeController)
+		// 图片验证码，需要加限流
+		authGroup.POST("/verify-codes/captcha", vcc.ShowCaptcha)
+	}
+	// }
+
+	meGroup := v1.Group("/me").Use(middlewares.AuthJWT())
+	{
+		mc := new(me.MeController)
+		meGroup.GET("/info", mc.Info)
 	}
 
 }

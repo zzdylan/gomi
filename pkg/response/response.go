@@ -18,7 +18,7 @@ func JSON(c *gin.Context, data interface{}) {
 // 执行某个『没有具体返回数据』的『变更』操作成功后调用，例如删除、修改密码、修改手机号
 func Success(c *gin.Context) {
 	JSON(c, gin.H{
-		"success": true,
+		"code":    0,
 		"message": "操作成功！",
 	})
 }
@@ -27,36 +27,22 @@ func Success(c *gin.Context) {
 // 执行『更新操作』成功后调用，例如更新话题，成功后返回已更新的话题
 func Data(c *gin.Context, data interface{}) {
 	JSON(c, gin.H{
-		"success": true,
-		"data":    data,
+		"code": 0,
+		"data": data,
 	})
 }
 
-// Created 响应 201 和带 data 键的 JSON 数据
-// 执行『更新操作』成功后调用，例如更新话题，成功后返回已更新的话题
-func Created(c *gin.Context, data interface{}) {
-	c.JSON(http.StatusCreated, gin.H{
-		"success": true,
-		"data":    data,
+func Fail(c *gin.Context, msg string) {
+	JSON(c, gin.H{
+		"code":    1,
+		"message": msg,
 	})
-}
-
-// CreatedJSON 响应 201 和 JSON 数据
-func CreatedJSON(c *gin.Context, data interface{}) {
-	c.JSON(http.StatusCreated, data)
 }
 
 // Abort404 响应 404，未传参 msg 时使用默认消息
 func Abort404(c *gin.Context, msg ...string) {
 	c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 		"message": defaultMessage("数据不存在，请确定请求正确", msg...),
-	})
-}
-
-// Abort403 响应 403，未传参 msg 时使用默认消息
-func Abort403(c *gin.Context, msg ...string) {
-	c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-		"message": defaultMessage("权限不足，请确定您有对应的权限", msg...),
 	})
 }
 
