@@ -2,7 +2,6 @@ package queue
 
 import (
 	"encoding/json"
-	"fmt"
 	"gomi/pkg/config"
 	"gomi/pkg/logger"
 	"gomi/pkg/nsqhelper"
@@ -10,6 +9,7 @@ import (
 	"time"
 
 	"github.com/nsqio/go-nsq"
+	"go.uber.org/zap"
 )
 
 const MasterTask = "master_task"
@@ -51,8 +51,28 @@ func (mq *MasterHandler) HandleMessage(message *nsq.Message) error {
 	if err := json.Unmarshal(message.Body, &payload); err != nil {
 		return err
 	}
-	fmt.Println(payload)
+	logger.Info("MasterQueue", zap.Any("payload", payload))
+	// 每30秒执行一次Touch(防止nsq超时重新进入队列，但是要注意的是就算touch也无法超过nsq启动参数中的--max-msg-timeout的时间)
+	done := make(chan struct{})
+	defer close(done)
+	go func() {
+		ticker := time.NewTicker(30 * time.Second)
+		defer ticker.Stop()
 
+		for {
+			select {
+			case <-ticker.C:
+				// message.Touch()
+				logger.Info("MasterQueue", zap.String("status", "processing"))
+			case <-done:
+				return
+			}
+		}
+	}()
+
+	time.Sleep(1 * time.Hour)
+	//结束定时touch
+	done <- struct{}{}
 	return nil
 }
 

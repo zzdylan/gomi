@@ -10,8 +10,9 @@ func AddConsumer(addr, topic, channel string, concurrency int, handler nsq.Handl
 	myconfig := nsq.NewConfig()
 	// myconfig.MaxInFlight = 100
 	myconfig.MaxInFlight = concurrency
-	myconfig.MaxAttempts = 3 // 消息最大重试次数
+	myconfig.MaxAttempts = 0 // 消息最大重试次数
 	myconfig.MsgTimeout = 5 * time.Minute
+	// myconfig.MsgTimeout = 10 * time.Hour
 	o := Options{
 		config: myconfig,
 	}

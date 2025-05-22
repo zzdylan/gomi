@@ -17,6 +17,6 @@ func runTestPublishNsq(cmd *cobra.Command, args []string) {
 	payload := queue.MasterPayload{
 		Test: "test",
 	}
-	// queue.PublishMaster(payload)
-	queue.DeferredPublishMaster(payload)
+	queue.PublishMaster(payload)
+	// queue.DeferredPublishMaster(payload)
 }
