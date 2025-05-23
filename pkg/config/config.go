@@ -88,15 +88,37 @@ func Get(path string, defaultValue ...interface{}) string {
 	return GetString(path, defaultValue...)
 }
 
+// func internalGet(path string, defaultValue ...interface{}) interface{} {
+// 	// config 或者环境变量不存在的情况
+// 	if !viper.IsSet(path) || helpers.Empty(viper.Get(path)) {
+// 		if len(defaultValue) > 0 {
+// 			return defaultValue[0]
+// 		}
+// 		return nil
+// 	}
+// 	return viper.Get(path)
+// }
+
 func internalGet(path string, defaultValue ...interface{}) interface{} {
-	// config 或者环境变量不存在的情况
-	if !viper.IsSet(path) || helpers.Empty(viper.Get(path)) {
+	if !viper.IsSet(path) {
 		if len(defaultValue) > 0 {
 			return defaultValue[0]
 		}
 		return nil
 	}
-	return viper.Get(path)
+
+	// 获取值
+	value := viper.Get(path)
+
+	// 如果值不是布尔型且为空，则使用默认值
+	if _, isBool := value.(bool); !isBool && helpers.Empty(value) {
+		if len(defaultValue) > 0 {
+			return defaultValue[0]
+		}
+		return nil
+	}
+
+	return value
 }
 
 // GetString 获取 String 类型的配置信息
